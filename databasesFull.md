@@ -113,7 +113,7 @@ CREATE INDEX port_calls_vessel_arrived ON port_calls (vessel_id, arrived_at DESC
 - Hash indexes answer equality only. A B+ tree also answers order and range, which is why it is the default.
 - It is a phone book. You open it in the middle, then the quarter, and the names on one page are in order so you can read a range.
 - careful: Expecting an index to help LIKE '%rou%'. A leading wildcard cannot walk an ordered tree.
-- Say B+ tree if they ask what Postgres builds for a normal CREATE INDEX.
+- A normal CREATE INDEX in Postgres builds a B+ tree.
 - Why not a binary search on the table file?
 - Rows are not kept in key order on disk, and inserts would reshuffle the file. The B+ tree is the ordered structure beside the table.
 
@@ -279,7 +279,7 @@ $$ SELECT count(*) FROM port_calls WHERE departed_at IS NULL $$;
 - Prefer a constraint when the rule is 'this column must be unique' or 'this key must exist'.
 - A view is a window with a particular curtain. A trigger is a bell on the door.
 - careful: A trigger that updates the same table and fires itself.
-- You do not need one in the viva unless they ask. Know the difference.
+- A view and a trigger are different tools. Use a view to read. Use a trigger only for a small rule you do not want to forget.
 - Trigger or application code for updated_at?
 - A trigger or a database default is harder to forget. Application code misses the one path that used a raw query. For laytime money, I still want the tested TypeScript, not a hidden trigger.
 
@@ -406,7 +406,7 @@ writes go to the primary
 - Do this after one Postgres is actually too big. Not before.
 - Sharding is several filing cabinets. If the label is wrong, you open all of them.
 - careful: Sharding before you have measured a single-node limit.
-- A viva topic, not something you claim to operate today unless you have.
+- Sharding is a design you use after one Postgres is too big. The three projects are not sharded.
 - What would you shard first in Bracket?
 - By tournament id, if one database could no longer hold the matches. Users who cross tournaments become a scatter, so I would not shard by user id if the hot path is one tournament.
 
